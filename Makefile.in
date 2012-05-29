@@ -529,7 +529,7 @@ kttimedmgr : kttimedmgr.o $(LIBRARYFILES)
 
 ktserver : ktserver.o myscript.o $(LIBRARYFILES)
 	$(CXX) $(CXXFLAGS) -o $@ $< myscript.o \
-	  $(LDFLAGS) $(CMDLDFLAGS) -lkyototycoon $(CMDLIBS)
+	  $(LDFLAGS) $(CMDLDFLAGS) -lkyototycoon $(CMDLIBS) -pagezero_size 10000 -image_base 100000000
 
 
 ktremotetest : ktremotetest.o $(LIBRARYFILES)

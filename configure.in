@@ -137,12 +137,12 @@ then
   enables="$enables (no-event)"
 fi
 
-# Enable Lua extension
-AC_ARG_ENABLE(lua,
-  AC_HELP_STRING([--enable-lua], [build with Lua extension]))
-if test "$enable_lua" = "yes"
+# Enable Luajit extension
+AC_ARG_ENABLE(luajit,
+  AC_HELP_STRING([--enable-luajit], [build with Luajit extension]))
+if test "$enable_luajit" = "yes"
 then
-  luaver=`lua -e 'v = string.gsub(_VERSION, ".* ", ""); print(v)'`
+  luaver=`luajit -e 'v = string.gsub(_VERSION, ".* ", ""); print(v)'`
   MYCPPFLAGS="$MYCPPFLAGS -D_MYLUA"
   MYCPPFLAGS="$MYCPPFLAGS -I/usr/include/lua$luaver -I/usr/local/include/lua$luaver"
   MYCPPFLAGS="$MYCPPFLAGS -I/usr/include/lua -I/usr/local/include/lua"
@@ -154,7 +154,7 @@ then
   LIBRARY_PATH="$LIBRARY_PATH:/usr/lib/lua:/usr/local/lib/lua"
   CPATH="$CPATH:/usr/include/lua$luaver:/usr/local/include/lua$luaver"
   CPATH="$CPATH:/usr/include/lua:/usr/local/include/lua"
-  enables="$enables (lua)"
+  enables="$enables (luajit)"
 fi
 
 # Specify the installation path of Kyoto Cabinet
@@ -170,17 +170,17 @@ then
   PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$with_kc/lib/pkgconfig"
 fi
 
-# Specify the installation path of Lua
-AC_ARG_WITH(lua,
-  AC_HELP_STRING([--with-lua=DIR], [search DIR/include and DIR/lib for Lua]))
-if test -n "$with_lua"
+# Specify the installation path of Luajit
+AC_ARG_WITH(luajit,
+  AC_HELP_STRING([--with-luajit=DIR], [search DIR/include and DIR/lib for Luajit]))
+if test -n "$with_luajit"
 then
-  MYCPPFLAGS="$MYCPPFLAGS -I$with_lua/include"
-  MYLDFLAGS="$MYLDFLAGS -L$with_lua/lib"
-  CPATH="$CPATH:$with_lua/include"
-  LIBRARY_PATH="$LIBRARY_PATH:$with_lua/lib"
-  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$with_lua/lib"
-  PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$with_lua/lib/pkgconfig"
+  MYCPPFLAGS="$MYCPPFLAGS -I$with_luajit/include"
+  MYLDFLAGS="$MYLDFLAGS -L$with_luajit/lib"
+  CPATH="$CPATH:$with_luajit/include"
+  LIBRARY_PATH="$LIBRARY_PATH:$with_luajit/lib"
+  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$with_luajit/lib"
+  PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$with_luajit/lib/pkgconfig"
 fi
 
 # Messages
@@ -260,10 +260,10 @@ AC_CHECK_LIB(lzo2, main)
 AC_CHECK_LIB(lzma, main)
 AC_CHECK_LIB(kyotocabinet, main)
 AC_CHECK_LIB(kyotocabinet, main, MYCMDLIBS="$MYCMDLIBS -lkyotocabinet")
-if test "$enable_lua" = "yes"
+if test "$enable_luajit" = "yes"
 then
-  AC_CHECK_LIB(lua, main, MYCMDLIBS="$MYCMDLIBS -llua")
-  AC_CHECK_LIB(lua$luaver, main, MYCMDLIBS="$MYCMDLIBS -llua$luaver")
+  AC_CHECK_LIB(luajit, main, MYCMDLIBS="$MYCMDLIBS -lluajit")
+  AC_CHECK_LIB(luajit$luaver, main, MYCMDLIBS="$MYCMDLIBS -lluajit$luaver")
 fi
 AC_CHECK_LIB(kyototycoon, main, AC_MSG_WARN([old version of Kyoto Tycoon was detected]))
 MYLDLIBPATH="$LD_LIBRARY_PATH"
@@ -274,7 +274,7 @@ AC_CHECK_HEADER(stdint.h, true, AC_MSG_ERROR([stdint.h is required]))
 AC_CHECK_HEADER(unistd.h, true, AC_MSG_ERROR([unistd.h is required]))
 AC_CHECK_HEADER(sys/socket.h, true, AC_MSG_ERROR([sys/socket.h is required]))
 AC_CHECK_HEADER(kccommon.h, true, AC_MSG_ERROR([kccommon.h is required]))
-if test "$enable_lua" = "yes"
+if test "$enable_luajit" = "yes"
 then
   AC_CHECK_HEADER(lua.h, true, AC_MSG_ERROR([lua.h is required]))
 fi
