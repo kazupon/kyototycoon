@@ -144,16 +144,7 @@ if test "$enable_luajit" = "yes"
 then
   luaver=`luajit -e 'v = string.gsub(_VERSION, ".* ", ""); print(v)'`
   MYCPPFLAGS="$MYCPPFLAGS -D_MYLUA"
-  MYCPPFLAGS="$MYCPPFLAGS -I/usr/include/lua$luaver -I/usr/local/include/lua$luaver"
-  MYCPPFLAGS="$MYCPPFLAGS -I/usr/include/lua -I/usr/local/include/lua"
-  MYLDFLAGS="$MYLDFLAGS -L/usr/lib/lua$luaver -L/usr/local/lib/lua$luaver"
-  MYLDFLAGS="$MYLDFLAGS -L/usr/lib/lua -L/usr/local/lib/lua"
-  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/lua$luaver:/usr/local/lib/lua$luaver"
-  LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/lib/lua:/usr/local/lib/lua"
-  LIBRARY_PATH="$LIBRARY_PATH:/usr/lib/lua$luaver:/usr/local/lib/lua$luaver"
-  LIBRARY_PATH="$LIBRARY_PATH:/usr/lib/lua:/usr/local/lib/lua"
-  CPATH="$CPATH:/usr/include/lua$luaver:/usr/local/include/lua$luaver"
-  CPATH="$CPATH:/usr/include/lua:/usr/local/include/lua"
+  MYCPPFLAGS="$MYCPPFLAGS -I/usr/include/luajit-2.0 -I/usr/local/include/luajit-2.0"
   enables="$enables (luajit)"
 fi
 
@@ -172,12 +163,12 @@ fi
 
 # Specify the installation path of Luajit
 AC_ARG_WITH(luajit,
-  AC_HELP_STRING([--with-luajit=DIR], [search DIR/include and DIR/lib for Luajit]))
+  AC_HELP_STRING([--with-luajit=DIR], [search DIR/include/luajit-2.0 and DIR/lib for Luajit]))
 if test -n "$with_luajit"
 then
-  MYCPPFLAGS="$MYCPPFLAGS -I$with_luajit/include"
+  MYCPPFLAGS="$MYCPPFLAGS -I$with_luajit/include/luajit-2.0"
   MYLDFLAGS="$MYLDFLAGS -L$with_luajit/lib"
-  CPATH="$CPATH:$with_luajit/include"
+  CPATH="$CPATH:$with_luajit/include/luajit-2.0"
   LIBRARY_PATH="$LIBRARY_PATH:$with_luajit/lib"
   LD_LIBRARY_PATH="$LD_LIBRARY_PATH:$with_luajit/lib"
   PKG_CONFIG_PATH="$PKG_CONFIG_PATH:$with_luajit/lib/pkgconfig"
@@ -262,8 +253,7 @@ AC_CHECK_LIB(kyotocabinet, main)
 AC_CHECK_LIB(kyotocabinet, main, MYCMDLIBS="$MYCMDLIBS -lkyotocabinet")
 if test "$enable_luajit" = "yes"
 then
-  AC_CHECK_LIB(luajit, main, MYCMDLIBS="$MYCMDLIBS -lluajit")
-  AC_CHECK_LIB(luajit$luaver, main, MYCMDLIBS="$MYCMDLIBS -lluajit$luaver")
+  AC_CHECK_LIB(luajit-$luaver, main, MYCMDLIBS="$MYCMDLIBS -lluajit-$luaver")
 fi
 AC_CHECK_LIB(kyototycoon, main, AC_MSG_WARN([old version of Kyoto Tycoon was detected]))
 MYLDLIBPATH="$LD_LIBRARY_PATH"
